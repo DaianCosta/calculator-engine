@@ -1,0 +1,87 @@
+# 🧹 .gitignore para .NET Core / .NET
+
+## Build / Output
+
+bin/
+obj/
+out/
+publish/
+
+## Visual Studio
+
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Rider / JetBrains
+
+.idea/
+*.sln.iml
+
+## VS Code
+
+.vscode/
+
+## Logs
+
+*.log
+
+## Environment variables
+
+.env
+.env.*
+
+## Secrets
+
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+## NuGet
+
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+
+## Test Results
+
+TestResults/
+*.trx
+
+## Coverage
+
+coverage/
+*.coverage
+*.coveragexml
+
+## OS files
+
+.DS_Store
+Thumbs.db
+
+## Temporary files
+
+*.tmp
+*.temp
+*.bak
+
+## Docker
+
+docker-compose.override.yml
+
+## Node (se tiver frontend junto)
+
+node_modules/
+dist/
+build/
+
+## Generated files
+
+Generated/
+*.generated.cs
+
+```
+```
