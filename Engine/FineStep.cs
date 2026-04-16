@@ -1,8 +1,10 @@
-﻿namespace CalculatorEngine.Engine
-{
-    using System.Text.Json;
-    using CalculatorEngine.Domain.Models;
+﻿using System.Text.Json;
+using CalculatorEngine.Domain.Models;
 
+namespace CalculatorEngine.Engine
+{
+
+    //Multa
     public class FineStep : ICalculationStep
     {
         public string Type => "multa";

@@ -3,6 +3,7 @@
     using System.Text.Json;
     using CalculatorEngine.Domain.Models;
 
+    //Encargos (valores adicionais fixos)
     public class ChargesStep : ICalculationStep
     {
         public string Type => "encargos";

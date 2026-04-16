@@ -1,8 +1,11 @@
-﻿namespace CalculatorEngine.Engine
-{
-    using System.Text.Json;
-    using CalculatorEngine.Domain.Models;
+﻿using System.Text.Json;
+using CalculatorEngine.Domain.Models;
+using CalculatorEngine.Helpers;
 
+namespace CalculatorEngine.Engine
+{
+    
+    //Correção de juros monetario
     public class MonetaryCorrectionStep : ICalculationStep
     {
         public string Type => "correcao_monetaria";
@@ -11,39 +14,46 @@
         {
             var previous = context.CurrentValue;
 
-            if (!parameters.TryGetProperty("indices", out var indicesElement))
-                throw new Exception("Parâmetro 'indices' é obrigatório");
+            var periods = parameters.GetPeriods();
 
-            decimal fator = 1m;
+            decimal fatorTotal = 1m;
             var detalhes = new List<object>();
 
-            foreach (var item in indicesElement.EnumerateArray())
+            foreach (var p in periods)
             {
-                var mes = item.GetProperty("mes").GetString();
-                var valor = item.GetProperty("valor").GetDecimal();
+                var fator = (decimal)Math.Pow(
+                    (double)(1 + p.Indice),
+                    (double)p.Dias / p.DiasMes
+                );
 
-                fator *= (1 + valor);
+                fatorTotal *= fator;
 
                 detalhes.Add(new
                 {
-                    mes,
-                    taxa = valor,
-                    fatorParcial = fator
+                    mes = p.Mes,
+                    indice = p.Indice,
+                    dias = p.Dias,
+                    diasMes = p.DiasMes,
+                    fator
                 });
             }
 
-            context.CurrentValue *= fator;
+            // ⚠️ regra importante: não aplicar se fator negativo
+            if (fatorTotal <= 0)
+                return;
+
+            context.CurrentValue *= fatorTotal;
 
             context.Memory.Add(new CalculationMemory
             {
                 StepName = "Correção Monetária",
-                Description = "Fator acumulado de índices",
+                Description = "Correção pró-rata por período",
                 PreviousValue = previous,
                 NewValue = context.CurrentValue,
                 Details = new()
                 {
-                    ["fatorTotal"] = fator,
-                    ["indices"] = detalhes
+                    ["fatorTotal"] = fatorTotal,
+                    ["periodos"] = detalhes
                 }
             });
         }

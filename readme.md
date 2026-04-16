@@ -1,10 +1,10 @@
-# 🧮 Calculation Engine - Exemplos de JSON
+# 🧮 Calculation Engine - Testes de API
 
-Este documento contém exemplos de requisições para testar o motor de cálculo via API.
+Este documento contém exemplos de requisições JSON para testar o motor de cálculo financeiro.
 
 ---
 
-## 🧪 1. Correção Monetária (IPCA mock)
+# 📌 Estrutura da requisição
 
 ```json
 {
@@ -13,13 +13,32 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
     "diasAtraso": 60
   },
   "config": {
+    "steps": []
+  }
+}
+```
+
+---
+
+# 🧪 1. Correção Monetária (Pró-rata diário)
+
+```json
+{
+  "input": {
+    "valorOriginal": 10000,
+    "diasAtraso": 120
+  },
+  "config": {
     "steps": [
       {
         "type": "correcao_monetaria",
         "params": {
-          "indices": [
-            { "mes": "2024-01", "valor": 0.005 },
-            { "mes": "2024-02", "valor": 0.004 }
+          "periodos": [
+            { "mes": "2025-10", "indice": 0.0009, "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "indice": 0.0018, "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "indice": 0.0070, "dias": 10, "diasMes": 28 }
           ]
         }
       }
@@ -30,13 +49,13 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 2. Juros Simples
+# 🧪 2. Juros Simples (pró-rata)
 
 ```json
 {
   "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
+    "valorOriginal": 10000,
+    "diasAtraso": 120
   },
   "config": {
     "steps": [
@@ -44,7 +63,14 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
         "type": "juros",
         "params": {
           "tipo": "simples",
-          "taxa": 0.01
+          "taxa": 0.01,
+          "periodos": [
+            { "mes": "2025-10", "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "dias": 10, "diasMes": 28 }
+          ]
         }
       }
     ]
@@ -54,13 +80,13 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 3. Juros Compostos
+# 🧪 3. Juros Compostos (pró-rata)
 
 ```json
 {
   "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
+    "valorOriginal": 10000,
+    "diasAtraso": 120
   },
   "config": {
     "steps": [
@@ -68,7 +94,14 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
         "type": "juros",
         "params": {
           "tipo": "composto",
-          "taxa": 0.01
+          "taxa": 0.01,
+          "periodos": [
+            { "mes": "2025-10", "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "dias": 10, "diasMes": 28 }
+          ]
         }
       }
     ]
@@ -78,13 +111,13 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 4. Sem Juros
+# 🧪 4. Sem Juros
 
 ```json
 {
   "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
+    "valorOriginal": 10000,
+    "diasAtraso": 120
   },
   "config": {
     "steps": [
@@ -101,72 +134,22 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 5. Juros com Carência
+# 🧪 5. Correção + Juros Simples
 
 ```json
 {
   "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
-  },
-  "config": {
-    "steps": [
-      {
-        "type": "juros",
-        "params": {
-          "tipo": "simples",
-          "taxa": 0.01,
-          "carenciaDias": 30
-        }
-      }
-    ]
-  }
-}
-```
-
----
-
-## 🧪 6. Juros sobre Valor Original
-
-```json
-{
-  "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
-  },
-  "config": {
-    "steps": [
-      {
-        "type": "juros",
-        "params": {
-          "tipo": "simples",
-          "taxa": 0.01,
-          "incidencia": "valor_original"
-        }
-      }
-    ]
-  }
-}
-```
-
----
-
-## 🧪 7. Correção + Juros Simples
-
-```json
-{
-  "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
+    "valorOriginal": 10000,
+    "diasAtraso": 120
   },
   "config": {
     "steps": [
       {
         "type": "correcao_monetaria",
         "params": {
-          "indices": [
-            { "mes": "2024-01", "valor": 0.005 },
-            { "mes": "2024-02", "valor": 0.004 }
+          "periodos": [
+            { "mes": "2025-10", "indice": 0.0009, "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "indice": 0.0018, "dias": 30, "diasMes": 30 }
           ]
         }
       },
@@ -174,7 +157,11 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
         "type": "juros",
         "params": {
           "tipo": "simples",
-          "taxa": 0.01
+          "taxa": 0.01,
+          "periodos": [
+            { "mes": "2025-10", "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "dias": 30, "diasMes": 30 }
+          ]
         }
       }
     ]
@@ -184,22 +171,25 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 8. Pipeline Completa (Realista)
+# 🧪 6. Pipeline Completa (Realista)
 
 ```json
 {
   "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
+    "valorOriginal": 10000,
+    "diasAtraso": 120
   },
   "config": {
     "steps": [
       {
         "type": "correcao_monetaria",
         "params": {
-          "indices": [
-            { "mes": "2024-01", "valor": 0.005 },
-            { "mes": "2024-02", "valor": 0.004 }
+          "periodos": [
+            { "mes": "2025-10", "indice": 0.0009, "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "indice": 0.0018, "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "indice": 0.0070, "dias": 10, "diasMes": 28 }
           ]
         }
       },
@@ -207,7 +197,14 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
         "type": "juros",
         "params": {
           "tipo": "composto",
-          "taxa": 0.01
+          "taxa": 0.01,
+          "periodos": [
+            { "mes": "2025-10", "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "dias": 10, "diasMes": 28 }
+          ]
         }
       },
       {
@@ -215,12 +212,6 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
         "params": {
           "percentual": 0.02
         }
-      },
-      {
-        "type": "encargos",
-        "params": {
-          "valor": 50
-        }
       }
     ]
   }
@@ -229,53 +220,21 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ---
 
-## 🧪 9. Teste de Ordem (Importante)
-
-```json
-{
-  "input": {
-    "valorOriginal": 1000,
-    "diasAtraso": 60
-  },
-  "config": {
-    "steps": [
-      {
-        "type": "juros",
-        "params": {
-          "tipo": "simples",
-          "taxa": 0.01
-        }
-      },
-      {
-        "type": "correcao_monetaria",
-        "params": {
-          "indices": [
-            { "mes": "2024-01", "valor": 0.005 },
-            { "mes": "2024-02", "valor": 0.004 }
-          ]
-        }
-      }
-    ]
-  }
-}
-```
-
----
-
-# 💡 Observações
+# ⚠️ Observações Importantes
 
 * A ordem dos steps altera o resultado final
-* Correção monetária usa fator acumulado (não soma)
-* Juros pode ser simples, composto ou inexistente
-* O motor é totalmente configurável via JSON
+* Correção monetária usa fator acumulado (multiplicação)
+* Juros simples soma fatores
+* Juros composto multiplica fatores
+* Meses incompletos usam pró-rata diário
 
 ---
 
 # 🚀 Próximos passos
 
-* Criar testes automatizados (xUnit)
-* Integrar índices reais (IPCA, IGPM)
-* Persistir configurações no banco (MongoDB)
+* Implementar testes automatizados (xUnit)
+* Integrar índices reais (IPCA / IGPM)
+* Persistir configurações no MongoDB
 * Gerar PDF da memória de cálculo
 
 ```

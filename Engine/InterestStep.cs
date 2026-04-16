@@ -1,8 +1,11 @@
-﻿namespace CalculatorEngine.Engine
-{
-    using System.Text.Json;
-    using CalculatorEngine.Domain.Models;
+﻿using System.Text.Json;
+using CalculatorEngine.Domain.Models;
+using CalculatorEngine.Helpers;
 
+namespace CalculatorEngine.Engine
+{
+
+    //calcular JUROS
     public class InterestStep : ICalculationStep
     {
         public string Type => "juros";
@@ -11,48 +14,62 @@
         {
             var tipo = parameters.GetProperty("tipo").GetString();
 
-            // 🔥 1. Sem incidência
             if (tipo == "nenhum")
                 return;
 
             var taxa = parameters.GetProperty("taxa").GetDecimal();
-
-            var incidencia = parameters.TryGetProperty("incidencia", out var incProp)
-                ? incProp.GetString()
-                : "valor_atual";
-
-            var carencia = parameters.TryGetProperty("carenciaDias", out var carProp)
-                ? carProp.GetInt32()
-                : 0;
-
-            // 🔥 2. Regra de carência
-            if (context.Input.DiasAtraso <= carencia)
-                return;
-
-            var diasConsiderados = context.Input.DiasAtraso - carencia;
-            var meses = diasConsiderados / 30m;
-
-            // 🔥 3. Base de cálculo
-            decimal baseCalculo = incidencia == "valor_original"
-                ? context.Input.ValorOriginal
-                : context.CurrentValue;
+            var periods = parameters.GetPeriods();
 
             var previous = context.CurrentValue;
 
-            decimal juros = 0;
+            decimal fatorTotal = tipo == "simples" ? 0m : 1m;
+            var detalhes = new List<object>();
 
-            // 🔥 4. Tipos de juros
+            foreach (var p in periods)
+            {
+                var expoente = (double)p.Dias / p.DiasMes;
+
+                if (tipo == "simples")
+                {
+                    var fator = (decimal)Math.Pow(
+                        (double)(1 + taxa),
+                        expoente
+                    ) - 1;
+
+                    fatorTotal += fator;
+
+                    detalhes.Add(new
+                    {
+                        mes = p.Mes,
+                        fator
+                    });
+                }
+                else if (tipo == "composto")
+                {
+                    var fator = (decimal)Math.Pow(
+                        (double)(1 + taxa),
+                        expoente
+                    );
+
+                    fatorTotal *= fator;
+
+                    detalhes.Add(new
+                    {
+                        mes = p.Mes,
+                        fator
+                    });
+                }
+            }
+
+            decimal juros;
+
             if (tipo == "simples")
             {
-                juros = baseCalculo * taxa * meses;
-            }
-            else if (tipo == "composto")
-            {
-                juros = baseCalculo * (decimal)Math.Pow((double)(1 + taxa), (double)meses) - baseCalculo;
+                juros = context.CurrentValue * fatorTotal;
             }
             else
             {
-                throw new Exception($"Tipo de juros inválido: {tipo}");
+                juros = context.CurrentValue * (fatorTotal - 1);
             }
 
             context.CurrentValue += juros;
@@ -60,15 +77,15 @@
             context.Memory.Add(new CalculationMemory
             {
                 StepName = "Juros",
-                Description = $"{tipo} | {taxa:P} | base: {incidencia}",
+                Description = tipo,
                 PreviousValue = previous,
                 NewValue = context.CurrentValue,
                 Details = new()
                 {
+                    ["tipo"] = tipo,
+                    ["fatorTotal"] = fatorTotal,
                     ["juros"] = juros,
-                    ["meses"] = meses,
-                    ["base"] = baseCalculo,
-                    ["carencia"] = carencia
+                    ["periodos"] = detalhes
                 }
             });
         }

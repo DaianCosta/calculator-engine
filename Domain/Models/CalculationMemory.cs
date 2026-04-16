@@ -7,6 +7,7 @@
 
         public decimal PreviousValue { get; set; }
         public decimal NewValue { get; set; }
+
         public Dictionary<string, object> Details { get; set; } = new();
     }
 }
