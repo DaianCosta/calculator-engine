@@ -17,7 +17,9 @@
                 periods.Add(new Period
                 {
                     Mes = item.GetProperty("mes").GetString(),
-                    Indice = item.GetProperty("indice").GetDecimal(),
+                    Indice = item.TryGetProperty("indice", out var ind)
+                        ? ind.GetDecimal()
+                        : 0m,
                     Dias = item.GetProperty("dias").GetInt32(),
                     DiasMes = item.GetProperty("diasMes").GetInt32()
                 });
