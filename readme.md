@@ -218,6 +218,52 @@ Este documento contém exemplos de requisições JSON para testar o motor de cá
 }
 ```
 
+# 🧪 7. Pipeline Completa Simples (Too)
+```
+{
+  "input": {
+    "valorOriginal": 10000,
+    "diasAtraso": 118
+  },
+  "config": {
+    "steps": [
+      {
+        "type": "correcao_monetaria",
+        "params": {
+          "periodos": [
+            { "mes": "2025-10", "indice": 0.0009, "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "indice": 0.0018, "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "indice": 0.0033, "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "indice": 0.0070, "dias": 10, "diasMes": 28 }
+          ]
+        }
+      },
+      {
+        "type": "juros",
+        "params": {
+          "tipo": "simples",
+          "taxa": 0.01,
+          "periodos": [
+            { "mes": "2025-10", "dias": 16, "diasMes": 31 },
+            { "mes": "2025-11", "dias": 30, "diasMes": 30 },
+            { "mes": "2025-12", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-01", "dias": 31, "diasMes": 31 },
+            { "mes": "2026-02", "dias": 10, "diasMes": 28 }
+          ]
+        }
+      },
+      {
+        "type": "multa",
+        "params": {
+          "percentual": 0.02
+        }
+      }
+    ]
+  }
+}
+```
+
 ---
 
 # ⚠️ Observações Importantes
@@ -239,3 +285,5 @@ Este documento contém exemplos de requisições JSON para testar o motor de cá
 
 ```
 ```
+
+
