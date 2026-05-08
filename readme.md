@@ -337,3 +337,5 @@ quero fazer um procv onde quero comparar e pegar os valores abaixo:
 coluna "Base!H2" é igual a coluna "coberturas!B2"
 coluna "Base!B2" é igual a coluna "coberturas!F2"
 obter o valor da coluna "coberturas!E2" e atribuir na coluna "Base!AB2"
+
+=SEERRO(ÍNDICE(coberturas!E:E;CORRESP(1;(Base!H2=coberturas!B:B)*(Base!B2=coberturas!F:F);0));"")
