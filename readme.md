@@ -332,4 +332,8 @@ Este documento contém exemplos de requisições JSON para testar o motor de cá
 ```
 ```
 
+quero fazer um procv onde quero comparar e pegar os valores abaixo:
 
+coluna "Base!H2" é igual a coluna "coberturas!B2"
+coluna "Base!B2" é igual a coluna "coberturas!F2"
+obter o valor da coluna "coberturas!E2" e atribuir na coluna "Base!AB2"
