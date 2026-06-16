@@ -279,9 +279,9 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 * Gerar PDF da memória de cálculo
 
 ```
-```
 Console.WriteLine($"Culture: {CultureInfo.CurrentCulture.Name}");
 Console.WriteLine($"UI Culture: {CultureInfo.CurrentUICulture.Name}");
 Console.WriteLine($"Now: {DateTime.Now}");
 Console.WriteLine($"UtcNow: {DateTime.UtcNow}");
 Console.WriteLine($"TimeZone: {TimeZoneInfo.Local.Id}");
+```
