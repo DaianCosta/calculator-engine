@@ -280,8 +280,19 @@ Este documento contém exemplos de requisições para testar o motor de cálculo
 
 ```
 ```
+<<<<<<< HEAD
 Console.WriteLine($"Culture: {CultureInfo.CurrentCulture.Name}");
 Console.WriteLine($"UI Culture: {CultureInfo.CurrentUICulture.Name}");
 Console.WriteLine($"Now: {DateTime.Now}");
 Console.WriteLine($"UtcNow: {DateTime.UtcNow}");
 Console.WriteLine($"TimeZone: {TimeZoneInfo.Local.Id}");
+=======
+
+quero fazer um procv onde quero comparar e pegar os valores abaixo:
+
+coluna "Base!H2" é igual a coluna "coberturas!B2"
+coluna "Base!B2" é igual a coluna "coberturas!F2"
+obter o valor da coluna "coberturas!E2" e atribuir na coluna "Base!AB2"
+
+=SEERRO(ÍNDICE(coberturas!E:E;CORRESP(1;(Base!H2=coberturas!B:B)*(Base!B2=coberturas!F:F);0));"")
+>>>>>>> 7c7b30b425fbb30254e315fde97db301b35482d4
